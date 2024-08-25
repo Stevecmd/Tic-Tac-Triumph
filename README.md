@@ -31,10 +31,10 @@ Tic Tac Toe web app (computer or multiplayer).
 
 ## Authors
 
-- **[Taf Muzira]**  
+- **[Taf Muzira]**
   [muzirat0@gmail.com](mailto:muzirat0@gmail.com)
 
-- **[Onyekelu Chukwuebuka]**  
+- **[Onyekelu Chukwuebuka]**
   [conyekelu@yahoo.com](mailto:conyekelu@yahoo.com)
 
 - **[Steve Murimi]**
