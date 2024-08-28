@@ -42,4 +42,7 @@ Tic Tac Toe web app (computer or multiplayer).
 - **[Steve Murimi]**
 [murimi101@gmail.com](mailto:murimi101@gmail.com)
 
+- **[ThankGod UGOBO]**
+[ugobothankgod@gmail.com](mailto:ugobothankgod@gmail.com)
+
 Sound Effects from <a href="https://pixabay.com/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=6185">Pixabay</a>
