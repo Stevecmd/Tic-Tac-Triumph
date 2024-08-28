@@ -14,4 +14,26 @@
     "express": "^4.19.2",
     "socket.io": "^4.7.5"
   }
+    "name": "Tic-Tac-Triumph",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "node backend/index.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "express": "^4.19.2",
+        "socket.io-client": "^4.7.5",
+        "sqlite3": "^5.1.7"
+    },
+    "devDependencies": {
+        "jest": "^29.7.0",
+        "nodemon": "^3.1.4",
+        "socket.io": "^4.7.5",
+        "supertest": "^7.0.0"
+    }
 }

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const express = require("express");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
@@ -6,6 +7,10 @@ const cors = require("cors");
 
 /* helpers */
 const Lobby = require('./lobby');
+=======
+const express = require('express');
+const path = require('path');
+>>>>>>> 7d250ef11990a5800b1f333664a88415edcf7803
 
 const app = express();
 const port = 3000;
@@ -19,6 +24,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
+<<<<<<< HEAD
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
@@ -65,3 +71,16 @@ io.on('connection', (socket) => {
 server.listen(port, () => {
   console.log(`app listening at http://localhost:${port}`);
 });
+=======
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, '../frontend')));
+
+// Route to serve index.html
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/index.html'));
+});
+
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
+});
+>>>>>>> 7d250ef11990a5800b1f333664a88415edcf7803
