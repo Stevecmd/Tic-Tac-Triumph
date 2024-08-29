@@ -1,6 +1,11 @@
 import { useContext, createContext } from "react";
 import { Socket } from "socket.io-client";
 
+export type Player = {
+  socket_id: string;
+  icon: "X" | "O";
+};
+
 export type AppContextType = {
   tiles: (string | null)[];
   setTiles: React.Dispatch<React.SetStateAction<(string | null)[]>>;
@@ -11,10 +16,8 @@ export type AppContextType = {
   gameState: number;
   setGameState: React.Dispatch<React.SetStateAction<number>>;
   socket: Socket | null;
-  currentPlayer: (object | null);
-  setCurrentPlayer: React.Dispatch<React.SetStateAction<object>>;
-  activePlayer: (object | null);
-  setActivePlayer: React.Dispatch<React.SetStateAction<object>>;
+  activePlayer: Player | null;
+  setActivePlayer: React.Dispatch<React.SetStateAction<Player | null>>;
 };
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);

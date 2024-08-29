@@ -5,3 +5,10 @@
   grid-template-rows: 150px 150px 150px;
   cursor: pointer;
 }
+
+@media screen and (max-width: 767px) {
+  .board {
+    grid-template-columns: 100px 100px 100px;
+    grid-template-rows: 100px 100px 100px;
+  }
+}

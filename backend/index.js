@@ -28,10 +28,10 @@ const io = new Server(server, {
 });
 
 /* Serve static files from the 'frontend' directory */
-app.use(express.static(path.join(__dirname, "../frontend")));
+app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/index.html"));
+  res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
 });
 
 const lobby = new Lobby();

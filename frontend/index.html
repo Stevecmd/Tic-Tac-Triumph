@@ -1,27 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tic Tac Triumph</title>
-    <link rel="stylesheet" href="index.css">
-</head>
-<!-- Include Socket.IO library -->
-<script src="/socket.io/socket.io.js"></script>
-<script defer src="index.js"></script>
-<body>
-    <h1>Let's play a game</h1>
-    <canvas id="gameCanvas"></canvas>
-    <button id="restartButton" onclick="resetGame()">Restart</button>
-    <div id="scoreboard">
-        <p>X Wins: <span id="xWins">0</span></p>
-        <p>O Wins: <span id="oWins">0</span></p>
-        <p>Draws: <span id="draws">0</span></p>
-    </div>
-
-<div id="githubButtonContainer">
-    <a id="githubButton" href="https://github.com/Stevecmd/Tic-Tac-Triumph/" target="_blank">Check out our GitHub!</a>
-</div>
-
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + React + TS</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>
