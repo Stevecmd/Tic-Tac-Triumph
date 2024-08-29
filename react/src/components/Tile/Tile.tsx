@@ -25,26 +25,44 @@ function Tile({ index }: { index: number }) {
     setGameState,
     setStrikeClass,
     socket,
+    activePlayer,
+    setActivePlayer,
   } = useAppContext();
 
   const isDisabled = tiles[index] !== null || gameState !== PROGRESS_STATE;
 
-  function onClick() {
-    if (isDisabled) return;
+ function onClick() {
+   if (isDisabled) return;
+   if (activePlayer && activePlayer.socket_id == socket.id) {
+     
+   
+     const newTiles = [...tiles];
+     newTiles[index] = activePlayer.icon;
+     setTiles(newTiles);
 
-    clickSound.play();
+     setPlayerTurn(activePlayer.icon);
 
-    const newTiles = [...tiles];
-    newTiles[index] = playerTurn;
-    setTiles(newTiles);
-
-    const player = playerTurn === PLAYER_X ? PLAYER_O : PLAYER_X;
-    setPlayerTurn(player);
-
-    checkWinner(newTiles);
-
-    socket!.emit("playerMove", { ID: 1 }, { tiles: newTiles });
+     socket!.emit("playerMove", { ID: 1 }, { tiles: newTiles });
+     listenMoves()
+   }
+   else {
+        console.log("not eligible to play icon", playerTurn)
+      }
   }
+
+ 
+
+  function listenMoves() {
+    socket!.on("moves", (data, player) => {
+      console.log(player)
+          setActivePlayer(player)
+          clickSound.play();
+          checkWinner(data.tiles);
+        });
+  }
+    
+  
+ 
 
   function checkWinner(tiles: (string | null)[]) {
     for (const { combo, strikeClass } of WIN_COMBOS) {

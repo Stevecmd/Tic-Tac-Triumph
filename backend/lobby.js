@@ -1,46 +1,65 @@
 class Lobby {
-    constructor() {
-        this.rooms = {};
-        this.roomDataT = {};
-    }
+  constructor() {
+    this.rooms = {};
+    this.roomDataT = {};
+  }
 
-    addPlayer(socket, roomData) {
-        if (!this.rooms[roomData.ID]) {
-            this.rooms[roomData.ID] = [];
-            this.roomDataT = roomData;
+  addPlayer(socket, roomData) {
+    if (!this.rooms[roomData.ID]) {
+      this.rooms[roomData.ID] = [];
+      this.roomDataT = roomData;
+    }
+    let room = this.rooms[roomData.ID];
+    let room_length = room.length;
+    let player_icon = "X";
+    if (room_length < 2) {
+      // Assign icon to Player
+
+      if (room_length === 1) {
+        const existingPlayer = room.find((sock_player) => sock_player); // Get the existing player
+        if (existingPlayer) {
+          // Determine the opposite icon
+          player_icon = existingPlayer.icon === "X" ? "O" : "X";
         }
+      }
 
-        if (this.rooms[roomData.ID].length < 2) {
-            this.rooms[roomData.ID].push(socket.id);
-            socket.join(roomData.ID);
+      //   let player_icon = room_length == 1 ? "X" : "O";
+      room.push({ socket_id: socket.id, icon: player_icon });
+      socket.join(roomData.ID);
 
-            if (this.rooms[roomData.ID].length === 2) {
-                return 1;
-            }
-        } else {
-            return -1;
-        }
+      if (room.length === 2) {
+        return 1;
+      }
+    } else {
+      return -1;
     }
+  }
 
-    removePlayer(socket) {
-        console.log(`player ${socket.id} disconnected`);
-        if (this.roomDataT && this.rooms[this.roomDataT.ID]) {
-            console.log(this.roomDataT.ID);
-            const playIdx = this.rooms[this.roomDataT.ID].indexOf(socket.id);
-            if (playIdx > -1) {
-                console.log(`player ${socket.id} removed`);
-                this.rooms[this.roomDataT.ID].splice(playIdx, 1);
-                return 1;
-            } else {
-                return -1;
-            }
-        } else {
-            return -2;
-        } 
+  removePlayer(socket) {
+    console.log(`player ${socket.id} disconnected`);
+    if (this.roomDataT && this.rooms[this.roomDataT.ID]) {
+      this.rooms[this.roomDataT.ID] = this.rooms[this.roomDataT.ID].filter(
+        (player) => player.socket_id !== socket.id
+      );
+      console.log(`player ${socket.id} removed`);
+      return 1;
+    } else {
+      return -2;
     }
+  }
 
-    getPlayers() {
-        return this.rooms[this.roomDataT.ID];
+  getSockPlayer(socket) {
+    let curr_player = this.rooms[this.roomDataT.ID].find(
+      (player) => player.socket_id == socket.id
+    );
+    let next_player = this.rooms[this.roomDataT.ID].find(
+      (player) => player.socket_id != socket.id
+    );
+    return { curr: curr_player, next: next_player };
+  }
+
+  getPlayers() {
+    return this.rooms[this.roomDataT.ID];
   }
 }
 

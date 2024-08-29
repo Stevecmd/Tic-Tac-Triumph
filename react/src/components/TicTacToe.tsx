@@ -14,13 +14,14 @@ gameOverSound.volume = 0.2;
 import "./style.css";
 
 function TicTacToe() {
-  const { gameState } = useAppContext();
+  const { gameState, socket} = useAppContext();
+  
 
   useEffect(() => {
     if (gameState === X_WINS_STATE || gameState === O_WINS_STATE) {
       gameOverSound.play();
     }
-  }, [gameState]);
+  }, [gameState,socket]);
 
   return (
     <div className="tictactoe">

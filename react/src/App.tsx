@@ -12,6 +12,8 @@ function App() {
   const [tiles, setTiles] = useState(Array(9).fill(null));
   const [playerTurn, setPlayerTurn] = useState(PLAYER_X);
   const [strikeClass, setStrikeClass] = useState("");
+  const [currentPlayer, setCurrentPlayer] = useState({});
+  const [activePlayer, setActivePlayer] = useState({});
   const [gameState, setGameState] = useState(PROGRESS_STATE);
   const [socket, setSocket] = useState<Socket | null>(null);
 
@@ -28,6 +30,19 @@ function App() {
     });
 
     newSocket.emit("joinRoom", { ID: 1 });
+
+    newSocket.on("StartGame", (players) => {
+      const player = players.find((player) => {
+        return player.socket_id === newSocket.id
+      })
+      if (Object.keys(activePlayer).length === 0) {
+        setActivePlayer(player);
+        setPlayerTurn(player.icon);
+      }
+      setCurrentPlayer(player)
+      
+      
+    })
 
     newSocket.on("moves", (data) => {
       console.log(`received event from server`, data);
@@ -53,6 +68,13 @@ function App() {
     setGameState,
 
     socket,
+
+    currentPlayer,
+    setCurrentPlayer,
+
+    activePlayer,
+    setActivePlayer,
+
   };
 
   return (

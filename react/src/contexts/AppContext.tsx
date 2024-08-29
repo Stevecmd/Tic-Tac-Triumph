@@ -11,6 +11,10 @@ export type AppContextType = {
   gameState: number;
   setGameState: React.Dispatch<React.SetStateAction<number>>;
   socket: Socket | null;
+  currentPlayer: (object | null);
+  setCurrentPlayer: React.Dispatch<React.SetStateAction<object>>;
+  activePlayer: (object | null);
+  setActivePlayer: React.Dispatch<React.SetStateAction<object>>;
 };
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
