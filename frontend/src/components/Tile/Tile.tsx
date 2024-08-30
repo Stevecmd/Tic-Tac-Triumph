@@ -1,4 +1,6 @@
-import { useAppContext } from "contexts/AppContext";
+
+import { useAppContext, Score } from "contexts/AppContext";
+
 import {
   DRAW_STATE,
   O_WINS_STATE,
@@ -27,31 +29,42 @@ function Tile({ index }: { index: number }) {
     activePlayer,
     setActivePlayer,
     setWinner,
+    score,
+    setScore,
+    allPlayers,
   } = useAppContext();
 
-  const isDisabled =
-    !socket ||
-    !activePlayer ||
-    tiles[index] !== null ||
-    gameState !== PROGRESS_STATE ||
-    activePlayer.socket_id !== socket.id;
-
-  function onClick() {
-    if (isDisabled) return;
-
-    const newTiles = [...tiles];
-    newTiles[index] = activePlayer.icon;
-    setTiles(newTiles);
-
-    setPlayerTurn(activePlayer.icon);
-
-    socket!.emit("playerMove", { ID: 1 }, { tiles: newTiles });
-    listenMoves();
+  interface Player {
+    socket_id: string;
+    // Add other properties of the activePlayer object here
   }
+  
+  const isDisabled = tiles[index] !== null || gameState !== PROGRESS_STATE;
+
+ function onClick() {
+   if (isDisabled) return;
+    if (activePlayer && (activePlayer as Player).socket_id == socket?.id) {
+     
+   
+     const newTiles = [...tiles];
+     newTiles[index] = activePlayer.icon;
+     setTiles(newTiles);
+
+     setPlayerTurn(activePlayer.icon);
+
+     socket!.emit("playerMove", { ID: 1 }, { tiles: newTiles });
+     listenMoves()
+   }
+   else {
+        console.log("not eligible to play icon", playerTurn)
+      }
+  }
+
 
   function listenMoves() {
     socket!.on("moves", (data, player) => {
-      setActivePlayer(player);
+      setActivePlayer(player || null)
+
       clickSound.play();
       checkWinner(data.tiles);
     });
@@ -64,11 +77,32 @@ function Tile({ index }: { index: number }) {
       const value3 = tiles[combo[2]];
 
       if (value1 && value1 === value2 && value1 === value3) {
-        setStrikeClass(strikeClass);
-
         const win = value1 === PLAYER_X ? X_WINS_STATE : O_WINS_STATE;
+        let win_icon = ""
+        const newScore: Score = { ...score };
+        if (win == 0) {
+          newScore.X += 1;
+          win_icon = "X"
+        }
+        else if (win == 1) {
+          newScore.O += 1;  
+          win_icon = "O"
+        }
+        else {
+            newScore.draw += 1; 
+        }
+        const player = allPlayers?.find((player) => player.icon == win_icon)
+        if (player && player !== null) {
+          setActivePlayer(player)
+          console.log(player.icon, playerTurn)
+        }
+        socket?.emit("GameWon", player)
+        
+        setScore(newScore)
+
         setGameState(win);
         setWinner(value1);
+        setStrikeClass(strikeClass);
         return;
       }
     }
