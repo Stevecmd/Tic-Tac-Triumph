@@ -1,15 +1,17 @@
-.reset-button {
-  width: 100%;
-  height: 48px;
-  margin-top: 48px;
-  background-color: var(--saffron);
-  color: white;
-  font-size: 16px;
-  border-radius: 8px;
-  transition: opacity ease-in-out 400ms;
-  cursor: pointer;
+.winner {
+  margin-top: 20px;
+  font-size: 1.5rem;
+  color: #ff4081;
+  text-align: center;
 }
 
-.reset-button:hover {
-  opacity: 0.8;
+.waiting-message {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: #ff4081;
+  text-align: center;
 }

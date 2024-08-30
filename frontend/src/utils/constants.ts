@@ -1,13 +1,9 @@
 export const X_WINS_STATE = 0;
-
 export const O_WINS_STATE = 1;
-
 export const DRAW_STATE = 2;
-
 export const PROGRESS_STATE = 3;
 
 export const PLAYER_X = "X";
-
 export const PLAYER_O = "O";
 
 export const WIN_COMBOS = [

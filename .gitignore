@@ -4,4 +4,11 @@ node_modules
 =======
 node_modules/
 package-lock.json
+<<<<<<< HEAD
 >>>>>>> 3c005995747ba748f3b4519317fec9b3e5dbdb1c
+=======
+.env
+pnmp-lock.yaml
+.vercel
+dist
+>>>>>>> 3603663884e484d1bbc161ee88a412a4f7230433

@@ -14,9 +14,8 @@ class Lobby {
     let player_icon = "X";
     if (room_length < 2) {
       // Assign icon to Player
-
       if (room_length === 1) {
-        const existingPlayer = room.find((sock_player) => sock_player); // Get the existing player
+        const existingPlayer = room.find((sock_player) => sock_player);
         if (existingPlayer) {
           // Determine the opposite icon
           player_icon = existingPlayer.icon === "X" ? "O" : "X";
@@ -28,10 +27,12 @@ class Lobby {
       socket.join(roomData.ID);
 
       if (room.length === 2) {
-        return 1;
+        return 1; // Room is full, start game
+      } else {
+        return 0; // Waiting for another player
       }
     } else {
-      return -1;
+      return -1; // Room is full
     }
   }
 

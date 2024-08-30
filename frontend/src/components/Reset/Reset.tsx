@@ -4,14 +4,24 @@ import { useAppContext } from "contexts/AppContext";
 import "./style.css";
 
 function Reset() {
-  const { setTiles, setPlayerTurn, setStrikeClass, gameState, setGameState } =
-    useAppContext();
+  const {
+    setTiles,
+    setPlayerTurn,
+    setStrikeClass,
+    gameState,
+    setGameState,
+    socket,
+  } = useAppContext();
 
   function onClick() {
     setGameState(PROGRESS_STATE);
     setTiles(Array(9).fill(null));
     setPlayerTurn(PLAYER_X);
     setStrikeClass("");
+
+    if (socket) {
+      socket.emit("resetGame", { ID: 1 });
+    }
   }
 
   const text = gameState === PROGRESS_STATE ? "Reset" : "Play Again";
