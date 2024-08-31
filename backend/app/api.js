@@ -10,7 +10,7 @@ const app = express();
 
 // Configure CORS options
 const corsOptions = {
-  origin: [FRONTEND_URL],
+  origin: [FRONTEND_URL, process.env.VITE_SOCKET_URL, "http://localhost:3000"],
   methods: ["GET", "POST"],
   allowedHeaders: ["Content-Type"],
   credentials: true,
@@ -20,10 +20,9 @@ app.use(express.json());
 app.use(cors(corsOptions));
 
 /* Serve static files from the 'frontend' directory */
-app.use(express.static(path.join(__dirname, "../frontend/dist")));
-
+app.use(express.static(path.join(__dirname, "../../frontend/dist")));
 app.get("/game", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
+  res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
 });
 
 app.post("/score", async (req, res) => {

@@ -8,6 +8,7 @@ package-lock.json
 >>>>>>> 3c005995747ba748f3b4519317fec9b3e5dbdb1c
 =======
 .env
+.env.*
 pnmp-lock.yaml
 .vercel
 dist
