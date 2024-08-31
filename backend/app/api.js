@@ -20,10 +20,9 @@ app.use(express.json());
 app.use(cors(corsOptions));
 
 /* Serve static files from the 'frontend' directory */
-app.use(express.static(path.join(__dirname, "../frontend/dist")));
-
+app.use(express.static(path.join(__dirname, "../../frontend/dist")));
 app.get("/game", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
+  res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
 });
 
 app.post("/score", async (req, res) => {
