@@ -10,7 +10,7 @@ const app = express();
 
 // Configure CORS options
 const corsOptions = {
-  origin: [FRONTEND_URL],
+  origin: [FRONTEND_URL, process.env.VITE_SOCKET_URL, "http://localhost:3000"],
   methods: ["GET", "POST"],
   allowedHeaders: ["Content-Type"],
   credentials: true,

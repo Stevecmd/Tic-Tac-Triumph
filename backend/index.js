@@ -16,9 +16,14 @@ const server = createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: [FRONTEND_URL],
+    origin: [
+      FRONTEND_URL,
+      process.env.VITE_SOCKET_URL,
+      "http://localhost:3000",
+    ],
     methods: ["GET", "POST"],
   },
+  path: "/socket.io",
 });
 
 const lobby = new Lobby();
