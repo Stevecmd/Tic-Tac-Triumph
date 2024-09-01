@@ -5,3 +5,4 @@ package-lock.json
 pnmp-lock.yaml
 .vercel
 dist
+vercel.json
