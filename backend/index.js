@@ -19,6 +19,7 @@ const io = new Server(server, {
     origin: [
       FRONTEND_URL,
       process.env.VITE_SOCKET_URL,
+      process.env.DOMAIN2,
       "http://localhost:3000",
     ],
     methods: ["GET", "POST"],
