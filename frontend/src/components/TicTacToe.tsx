@@ -13,7 +13,7 @@ import { X_WINS_STATE, O_WINS_STATE, PROGRESS_STATE } from "utils/constants";
 import { useAppContext } from "contexts/AppContext";
 
 const gameOverSound = new Audio(gameOverSoundAsset);
-gameOverSound.volume = 0.2;
+gameOverSound.volume = 0.5;
 
 import "./style.css";
 

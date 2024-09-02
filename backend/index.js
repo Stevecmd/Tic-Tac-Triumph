@@ -31,36 +31,46 @@ const lobby = new Lobby();
 
 io.on("connection", (socket) => {
   socket.on("joinRoom", (roomData) => {
-    const status = lobby.addPlayer(socket, roomData);
-    if (status === 1) {
-      const players = lobby.getPlayers();
-      console.log(players);
-      io.to(roomData.ID).emit("StartGame", players);
-    } else if (status === 0) {
-      socket.emit("waitingForPlayer");
-    } else if (status === -1) {
-      console.log("Room is full");
+    const player = lobby.addPlayerToRoom(socket);
+    console.log("All Rooms: ", lobby.rooms);
+
+    if (player) {
+      const roomId = player.room_id;
+      const players = lobby.rooms[roomId];
+      io.to(roomId).emit("playerJoined", player);
+      if (players.length === 2) {
+        console.log(players);
+        io.to(roomId).emit("StartGame", players);
+      } else if (players.length === 1) {
+        socket.emit("waitingForPlayer", player);
+      } else {
+        console.log("Unexpected room state");
+      }
+    } else {
+      socket.emit("roomFullOrError", {
+        message: "Room is full or an error occurred.",
+      });
     }
   });
 
-  socket.on("playerMove", (room, data) => {
-    let player = lobby.getSockPlayer(socket);
-    //   let next_player
-    io.to(room.ID).emit("moves", data, player.next);
+  socket.on("playerMove", (data) => {
+    const next_player = lobby.getNextPlayer(data.player);
+    io.to(data.player.room_id).emit("moves", {
+      tiles: data.tiles,
+      player: next_player,
+    });
   });
 
-  socket.on("resetGame", (room) => {
-    io.to(room.ID).emit("resetGame");
+  socket.on("resetGame", (player, text) => {
+    io.to(player.room_id).emit("resetGame", player, text);
   });
 
   socket.on("disconnect", () => {
-    const status = lobby.removePlayer(socket);
-    if (status === 1) {
-      io.to(lobby.roomDataT.ID).emit("playerDisconnected", socket.id);
-      io.to(lobby.roomDataT.ID).emit("resetGame");
-    } else if (status === -1) {
-      console.log(`Could not remove player from this room: ${"?"}`);
-    } else if (status === -2) {
+    const result = lobby.removePlayerBySocketId(socket.id);
+    if (result && result.player) {
+      io.to(result.player.room_id).emit("playerDisconnected", socket.id);
+      io.to(result.player.room_id).emit("resetGame");
+    } else {
       console.log("Invalid room");
     }
   });

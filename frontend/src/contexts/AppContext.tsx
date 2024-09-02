@@ -4,7 +4,8 @@ import { Socket } from "socket.io-client";
 // Define the type for a player
 export type Player = {
   socket_id: string;
-  icon: string;
+  player_icon: string;
+  room_id: number;
 };
 
 export interface Score {
