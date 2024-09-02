@@ -13,7 +13,7 @@ import clickSoundFile from "sounds/mouse_click.mp3";
 import "./style.css";
 
 const clickSound = new Audio(clickSoundFile);
-clickSound.volume = 0.4;
+clickSound.volume = 0.5;
 
 function Tile({ index }: { index: number }) {
   const {
@@ -27,6 +27,7 @@ function Tile({ index }: { index: number }) {
     socket,
     activePlayer,
     setActivePlayer,
+    currentPlayer,
     score,
     setScore,
     allPlayers,
@@ -34,6 +35,8 @@ function Tile({ index }: { index: number }) {
 
   interface Player {
     socket_id: string;
+    player_icon: string;
+    room_id: number;
     // Add other properties of the activePlayer object here
   }
 
@@ -41,23 +44,20 @@ function Tile({ index }: { index: number }) {
 
   function onClick() {
     if (isDisabled) return;
-    if (activePlayer && (activePlayer as Player).socket_id == socket?.id) {
+    if (activePlayer && currentPlayer && (activePlayer as Player).socket_id == currentPlayer.socket_id) {
       const newTiles = [...tiles];
-      newTiles[index] = activePlayer.icon;
+      newTiles[index] = activePlayer.player_icon;
       setTiles(newTiles);
-
-      setPlayerTurn(activePlayer.icon);
-
-      socket!.emit("playerMove", { ID: 1 }, { tiles: newTiles });
+      clickSound.play();
+      socket!.emit("playerMove", {player: activePlayer, tiles:newTiles });
       listenMoves();
     }
   }
 
   function listenMoves() {
-    socket!.on("moves", (data, player) => {
-      setActivePlayer(player || null);
-
-      clickSound.play();
+    socket!.on("moves", (data) => {
+      setActivePlayer(data.player);
+      setPlayerTurn(data.player.player_icon);
       checkWinner(data.tiles);
     });
   }
@@ -81,9 +81,10 @@ function Tile({ index }: { index: number }) {
         } else {
           newScore.draw += 1;
         }
-        const player = allPlayers?.find((player) => player.icon == win_icon);
+        const player = allPlayers?.find((player) => player.player_icon == win_icon);
+        const next_player = allPlayers?.find((player) => player.player_icon != win_icon);
         if (player && player !== null) {
-          setActivePlayer(player);
+          setActivePlayer(next_player || null);
         }
         socket?.emit("GameWon", player);
 
@@ -99,8 +100,12 @@ function Tile({ index }: { index: number }) {
     const areAllTilesFilledIn = tiles.every((tile) => tile);
     if (areAllTilesFilledIn) {
       setGameState(DRAW_STATE);
+      const newScore: Score = { ...score };
+      newScore.draw += 1;
+      setScore(newScore);
     }
   }
+  
 
   return (
     <button

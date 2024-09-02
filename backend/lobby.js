@@ -1,7 +1,78 @@
 class Lobby {
   constructor() {
-    this.rooms = {};
+    this.rooms = { 0: [] };
     this.roomDataT = {};
+    this.room_count = Object.keys(this.rooms).length;
+  }
+
+  getAvailableRoomID() {
+    for (let i = 0; i < this.room_count; i++) {
+      if (this.rooms[i]) {
+        if (this.rooms[i].length < 2) {
+          return i;
+        } else if (this.rooms[i].length == 2 && i == this.room_count - 1) {
+          console.log("Creating new room", this.room_count);
+          const id = this.room_count;
+          this.rooms[id] = [];
+          this.room_count = Object.keys(this.rooms).length;
+          return id;
+        }
+      }
+    }
+  }
+
+  getAvailableIcon(room_id) {
+    // Get available player icon from the room
+
+    const room = this.rooms[room_id];
+    if (room) {
+      if (room.length === 0) return "O";
+      else {
+        const existingPlayer = room.find((player) => player);
+        if (existingPlayer) {
+          return existingPlayer.player_icon === "X" ? "O" : "X";
+        }
+      }
+    }
+    // else return "O";
+  }
+
+  addPlayerToRoom(socket) {
+    const room_id = this.getAvailableRoomID();
+
+    this.rooms[room_id].push({
+      socket_id: socket.id,
+      player_icon: this.getAvailableIcon(room_id),
+      room_id: room_id,
+    });
+    socket.join(room_id);
+
+    const player = this.rooms[room_id].find((player) => {
+      return player.socket_id == socket.id;
+    });
+    console.log(`player ${socket.id} added to room ${room_id}`);
+    return player;
+  }
+
+  removePlayerBySocketId(socket_id) {
+    console.log(`player ${socket_id} disconnected`);
+    for (let i = 0; i < this.room_count; i++) {
+      const room = this.rooms[i];
+      if (room.length > 0) {
+        const playerIndex = room.findIndex(
+          (player) => player.socket_id === socket_id
+        );
+
+        // If a player is found, remove them from the room
+        if (playerIndex !== -1) {
+          room.splice(playerIndex, 1);
+          console.log(`player ${socket_id} removed from room ${i}`);
+          return { status: true, player: room[playerIndex] };
+        }
+      }
+    }
+    console.log(`player ${socket_id} not found in any room`);
+    return false;
   }
 
   addPlayer(socket, roomData) {
@@ -49,14 +120,11 @@ class Lobby {
     }
   }
 
-  getSockPlayer(socket) {
-    let curr_player = this.rooms[this.roomDataT.ID].find(
-      (player) => player.socket_id == socket.id
+  getNextPlayer(current_player) {
+    let next_player = this.rooms[current_player.room_id].find(
+      (player) => player.socket_id != current_player.socket_id
     );
-    let next_player = this.rooms[this.roomDataT.ID].find(
-      (player) => player.socket_id != socket.id
-    );
-    return { curr: curr_player, next: next_player };
+    return next_player;
   }
 
   getPlayers() {
